@@ -124,3 +124,33 @@ arrayProductos.splice(indiceDelProducto, 1);
 // SPLICE -> BORRA
 // SLICE -> COPIA
 // SPLIT -> CREA UN ARRAY SEGUN UN CARACTER
+
+
+//*****************************  Clase 7 *************************************
+
+
+
+// Sumar total del carrito
+const totalDelCarrito = productos.reduce((acumulador, producto) => acumulador + producto.precio, 0);
+console.log("Total del carrito:" + totalDelCarrito);
+
+// Crear un array apartir de otro
+const nuevoListadoProductos = productos.map((producto) => {
+    if(producto.stock === 0){
+        producto.stock = "No hay stock";
+    }
+    return producto;
+})
+console.log(nuevoListadoProductos);
+
+// Codigo para filtrar por precio/caegoria/etc
+const productosDeMayorPrecio = productos.filter((producto) => producto.precio > 750 );
+console.log(productosDeMayorPrecio);
+generarCards(productosDeMayorPrecio);
+
+
+// Codigo para buscador
+const valorDelBucador = "remera Puma"
+const productoEncontrado = productos.find(
+    (producto) => producto.titulo.toUpperCase().trim() === valorDelBucador.toUpperCase().trim());
+// console.log(productoEncontrado);
