@@ -284,32 +284,92 @@
 //   // const input = document.getElementById("texto-prueba").value;
 //   // console.log(input);
 // }
-const idCapturado = document.getElementById("botonModal");
-idCapturado.innerHTML = `<button id="botonModal" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-      <form>
-        <div class="mb-3">
-          <label for="recipient-name" class="col-form-label">Recipient:</label>
-          <input type="text" class="form-control" id="recipient-name">
-        </div>
-        <div class="mb-3">
-          <label for="message-text" class="col-form-label">Message:</label>
-          <textarea class="form-control" id="message-text"></textarea>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Send message</button>
-    </div>
-  </div>
-</div>
-</div>`
 
+//*****************************  Clase 11 Storage y JSON *************************************
+
+const carrito = validarStorageCarrito();
+
+function validarStorageCarrito(){
+    if(localStorage.getItem("carrito") != null){
+        const storageProductos = JSON.parse(localStorage.getItem("carrito"));
+        return storageProductos;
+    }else{
+        return [];
+    }
+}
+
+document.getElementById("cantidad-prod").innerHTML = carrito.length;
+
+const agregarAlCarrito = (idProducto) => {
+  const valorDeCantidad = document.getElementById(
+      `cantidad-${idProducto}`
+  ).value;
+  
+  // Buscando el producto a agregar
+  const productoAgregado = productos.find(producto => producto.id === idProducto);
+  productoAgregado.cantidad = valorDeCantidad;
+
+  // Agregando al carrito
+  carrito.push(productoAgregado);
+
+  // Actualizando el storage del carrito
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+
+  // Actualizando el html
+  document.getElementById("cantidad-prod").innerHTML = carrito.length;
+
+  // Actualizar stock
+  // Volver a generar las cards
+};
+
+const irAlProducto = (idProducto) => {
+  // Buscamos el producto
+  const productoQueQuiereVer = productos.find(producto => producto.id === idProducto);
+
+  localStorage.setItem("productoAVer", JSON.stringify(productoQueQuiereVer));
+};
+
+generarCards(productos);
+
+function generarCards(productosAMostrar){
+  let acumuladorDeCards = ``;
+  productosAMostrar.forEach((elementoDelArray) => {
+      acumuladorDeCards += `<div class="col mb-5">
+      <div class="card h-100">
+          <!-- Sale badge-->
+          <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+              ${(elementoDelArray.stock > 0) ? 'Esta en venta' : 'Out stock'}
+          </div>
+          <!-- Product image-->
+          <img class="card-img-top" src="${elementoDelArray.imagen}" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+              <div class="text-center">
+                  <!-- Product name-->
+                  <h5 class="fw-bolder">${elementoDelArray.titulo}</h5>
+                  <!-- Product price-->
+                  <span class="text-muted text-decoration-line-through">$20.00</span>
+                  <input value="1" min="1" id="cantidad-${elementoDelArray.id}" type="number" placeholder="cantidad">
+                  $${elementoDelArray.precio}
+              </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent" >
+              <div class="text-center">
+                  <button 
+                      onclick="agregarAlCarrito(${elementoDelArray.id})"
+                      class="btn btn-outline-dark mt-auto" href="#">
+                      Add to cart
+                  </button>
+                  <button 
+                      onclick="irAlProducto(${elementoDelArray.id})"
+                      class="btn btn-outline-dark mt-auto" href="#">
+                      Ver producto
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>`;
+  });
+  mostrarCardsEnElHTML(acumuladorDeCards);
+}
