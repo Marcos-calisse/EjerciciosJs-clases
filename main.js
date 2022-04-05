@@ -165,27 +165,27 @@
 
 
 
-// const agregarAlCarrito = (idProducto) => {
-//   const valorDeCantidad = document.getElementById(
-//       `cantidad-${idProducto}`
-//   ).value;
+const agregarAlCarrito0 = (idProducto) => {
+  const valorDeCantidad = document.getElementById(
+      `cantidad-${idProducto}`
+  ).value;
   
-  // Buscando el producto a agregar
-  // const productoAgregado = productos.find(producto => producto.id === idProducto);
-  // productoAgregado.cantidad = valorDeCantidad;
+  //Buscando el producto a agregar
+  const productoAgregado = productos.find(producto => producto.id === idProducto);
+  productoAgregado.cantidad = valorDeCantidad;
 
-  // Agregando al carrito
-  // carrito.push(productoAgregado);
+  //Agregando al carrito
+  carrito.push(productoAgregado);
 
-  // Actualizando el storage del carrito
-  // localStorage.setItem("carrito", JSON.stringify(carrito));
+  //Actualizando el storage del carrito
+  localStorage.setItem("carrito", JSON.stringify(carrito));
 
-  // Actualizando el html
-  // document.getElementById("cantidad-prod").innerHTML = carrito.length;
+  //Actualizando el html
+  document.getElementById("cantidad-prod").innerHTML = carrito.length;
 
-  // Actualizar stock
-  // Volver a generar las cards
-// };
+  //Actualizar stock
+  //Volver a generar las cards
+};
 
 // const irAlProducto = (idProducto) => {
 //   // Buscamos el producto
@@ -372,4 +372,37 @@ function generarCards(productosAMostrar){
   </div>`;
   });
   mostrarCardsEnElHTML(acumuladorDeCards);
+}
+
+//*****************************  Clase repaso 05-04 *************************************
+
+const agregarAlCarrito1 = (idProducto, cantidadAgregados = 1) =>{
+
+    const indiceEncontradoProducto = listaProductos.findIndex((elemento) => {
+        return elemento.id === idProducto;
+    });
+    const productoAgregado = listaProductos[indiceEncontradoProducto]
+    
+    const existeElProducto = carrito.findIndex((producto) => producto.id === productoAgregado.id);
+    
+    existeElProducto ? carrito[existeElProducto].cantidad += cantidadAgregados : carrito.push(productoAgregado);
+    
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    calcularTotalCarrito();
+}
+
+const calcularTotalCarrito = () => {
+    const totalCarrito = carrito.reduce((accum, element) => accum + (element.precio * element.cantidad), 0);
+
+    document.getElementById("cart-total").innerHTML = totalCarrito;
+}
+
+
+// Cart.html
+const sumarCantidad = (idProducto) => {
+    const indiceEncontradoProducto = carrito.findIndex((elemento) => {
+        return elemento.id === idProducto;
+    });
+    carrito[indiceEncontradoProducto].cantidad += 1;
+    // re-renderizar el html
 }
